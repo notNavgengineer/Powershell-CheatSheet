@@ -51,8 +51,18 @@ Instead of trying to memorize hundreds of PowerShell commands, this guide focuse
 | 10 | 📋 Quick Reference  | Everything at a glance                  |
 
 > 📖 **Full command reference:** [`powershell-cheatsheet`](./powershell-cheatseet.md)
+>
+> 
+## 📚 Choose Your Version
+
+> Two versions, same commands — choose the one that's easier for you.
+
+🇬🇧 [**English Cheat Sheet →**](./powershell-cheatseet.md)
+
+🇮🇳 [**Hinglish Cheat Sheet →**](./powershell-cheatsheet-(Hinglish).md)
 
 ---
+
 
 # ⚡ Quick Preview
 
