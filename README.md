@@ -50,7 +50,7 @@ Instead of trying to memorize hundreds of PowerShell commands, this guide focuse
 | 9  | 🧠 Command Patterns | Understand PowerShell naming            |
 | 10 | 📋 Quick Reference  | Everything at a glance                  |
 
-> 📖 **Full command reference:** [`powershell-80-20.md`](./powershell-80-20.md)
+> 📖 **Full command reference:** [`powershell-cheatsheet`](./powershell-cheatsheet.md)
 
 ---
 
