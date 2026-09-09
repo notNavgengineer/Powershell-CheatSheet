@@ -1,165 +1,382 @@
-# Powershell-CheatSheet
-| PowerShell Cheat Sheet – Only 40 commands for 90% daily dev work | 
+# ⚡ PowerShell 80/20 — Dev Cheat Sheet
+
+> **Only 40 PowerShell commands that cover 90% of daily development work.**
+
+**English · Beginner Friendly · Free to Share**
 
 <div align="center">
 
-# ⚡ PowerShell 80/20 – Dev Cheat Sheet
-
-**Only 40 commands that cover 90% of daily dev work.**
-
-*English | Beginner Friendly | Free to Share*
-
-[![PowerShell](https://img.shields.io/badge/PowerShell-7%2B-5391FE?logo=powershell&logoColor=white)]()
-[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
-[![Stars](https://img.shields.io/github/stars/YOUR_USERNAME/powershell-80-20?style=social)]()
+![PowerShell](https://img.shields.io/badge/PowerShell-7%2B-5391FE?logo=powershell\&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Commands](https://img.shields.io/badge/Commands-40-orange)
+![Beginner Friendly](https://img.shields.io/badge/Beginner-Friendly-brightgreen)
 
 </div>
 
 ---
 
-## 🤔 What is This?
+## 🤔 What Is This?
 
-A **PowerShell cheat sheet** that follows the **80/20 rule** – only the commands you actually use every day.
+**PowerShell 80/20** is a practical cheat sheet based on the **80/20 rule**.
 
-> Not a "memorize all 500 commands" sheet.
-> Just the practical, daily-use commands.
+Instead of trying to memorize hundreds of PowerShell commands, this guide focuses on the **40 commands and patterns you'll actually use in everyday development**.
+
+> **Don't memorize everything. Understand the patterns and look up what you need.**
 
 ---
 
-## 🎯 Who is This For?
+## 🎯 Who Is This For?
 
-- ✅ Junior / Mid-level Software Engineers
-- ✅ DevOps / SRE beginners
-- ✅ Anyone learning PowerShell
-- ✅ Teams who want a quick reference
+* 👨‍💻 Junior / Mid-level Software Engineers
+* ⚙️ DevOps & SRE beginners
+* 🧑‍🎓 Students learning development
+* 🖥️ Developers switching from CMD / Bash
+* 👥 Teams looking for a quick PowerShell reference
 
 ---
 
 ## 📂 Table of Contents
 
-| # | Section | What it Covers |
-|---|---------|---------------|
-| 1 | 📁 Navigation | Moving around folders |
-| 2 | 🔍 Search & Read | Search logs, read files |
-| 3 | 🔗 Pipeline | Filter, Select, Sort |
-| 4 | ⚙️ Process | Fix port conflicts |
-| 5 | 🌐 Network | Test APIs & connectivity |
-| 6 | 📊 Data | Handle JSON/CSV |
-| 7 | 📜 Scripting | Write quick scripts |
-| 8 | 💡 Pro Tips | Shortcuts & tricks |
-| 9 | 🧠 Pattern | Understand the naming convention |
-| 10 | 📋 Quick Reference | Everything at a glance |
+| #  | Section             | What It Covers                          |
+| -- | ------------------- | --------------------------------------- |
+| 1  | 📁 Navigation       | Moving around folders                   |
+| 2  | 🔍 Search & Read    | Searching logs and reading files        |
+| 3  | 🔗 Pipeline         | Filter, select and sort data            |
+| 4  | ⚙️ Processes        | Manage processes and fix port conflicts |
+| 5  | 🌐 Networking       | Test APIs and connectivity              |
+| 6  | 📊 Data             | Work with JSON and CSV                  |
+| 7  | 📜 Scripting        | Write quick scripts                     |
+| 8  | 💡 Pro Tips         | Shortcuts and useful tricks             |
+| 9  | 🧠 Command Patterns | Understand PowerShell naming            |
+| 10 | 📋 Quick Reference  | Everything at a glance                  |
 
-> **Full details →** [**powershell-80-20.md**](./powershell-80-20.md)
+> 📖 **Full command reference:** [`powershell-80-20.md`](./powershell-80-20.md)
 
 ---
 
-## ⚡ Quick Preview
+# ⚡ Quick Preview
 
-### Port Conflict Fix (Every Dev's Problem)
+## 🔌 Port Conflict Fix
+
+One of the most common problems during development:
+
+**"Port 3000 is already in use!"**
 
 ```powershell
-# Port 3000 blocked? Kill it.
+# Find the process using port 3000
 $port = Get-NetTCPConnection -LocalPort 3000
-stop-process -Id $port.OwningProcess -force
-Write-Host "Port free! ✅" -ForegroundColor Green
 
-API Test (1 Line)
-# Get user info from GitHub.
+# Stop the process
+Stop-Process -Id $port.OwningProcess -Force
+
+Write-Host "Port free!" -ForegroundColor Green
+```
+
+---
+
+## 🌐 API Test — One Line
+
+Get information from an API:
+
+```powershell
+# Get user information from GitHub
+$me = Invoke-RestMethod "https://api.github.com/users/octocat"
+
+$me.name
+# → The Octocat
+```
+
+Short alias:
+
+```powershell
 $me = irm "https://api.github.com/users/octocat"
-$me.name  # → "The Octocat"
+```
 
-Log Search (Like Grep)
-# Search "error" in log file.
+---
+
+## 🔍 Log Search — Like `grep`
+
+Search for `"error"` inside a log file:
+
+```powershell
+Select-String "error" -Path "C:\logs\app.log" -Context 2
+```
+
+Short alias:
+
+```powershell
 sls "error" -Path "C:\logs\app.log" -Context 2
+```
 
-Golden Pipeline (Remember This 1 Line)
-# Show processes with CPU > 50%, sorted by CPU descending.
-Get-Process | ? { $_.CPU -gt 50 } | select Name, CPU | sort CPU -desc
+---
 
-📊 Stats
-Metric	Value
-Total Commands	40
-Covers Daily Work	90%
-Time to Learn	2-3 days
-Platform	Windows, Mac, Linux (PS 7+)
-License	MIT (free to use)
+## 🔗 The Golden Pipeline
 
-🚀 Getting Started
-Step 1: Install PowerShell
-# Windows:
+Filter processes using more than 50 CPU and sort them by CPU usage:
+
+```powershell
+Get-Process |
+    Where-Object { $_.CPU -gt 50 } |
+    Select-Object Name, CPU |
+    Sort-Object CPU -Descending
+```
+
+Short aliases:
+
+```powershell
+Get-Process |
+    ? { $_.CPU -gt 50 } |
+    select Name, CPU |
+    sort CPU -desc
+```
+
+> 💡 **Pipeline = Get → Filter → Select → Sort**
+
+---
+
+# 📊 Project Stats
+
+| Metric                     | Value                   |
+| -------------------------- | ----------------------- |
+| 📦 Total Commands          | **40**                  |
+| 🎯 Daily Work Coverage     | **~90%**                |
+| ⏱️ Suggested Learning Time | **2–3 days**            |
+| 💻 Platforms               | Windows · macOS · Linux |
+| 🟦 PowerShell Version      | **7+**                  |
+| 📜 License                 | **MIT**                 |
+
+---
+
+# 🚀 Getting Started
+
+## Step 1 — Install PowerShell
+
+### Windows
+
+```powershell
 winget install Microsoft.PowerShell
+```
 
-# Mac:
+### macOS
+
+```bash
 brew install --cask powershell
+```
 
-# Linux:
+### Linux
+
+```bash
 sudo snap install powershell --classic
+```
 
-Step 2: Open the File
-1. Download powershell-80-20.md
-2. Open in VS Code
-3. Press Ctrl+Shift+V (preview)
-4. Bookmark it
+---
 
-Step 3: Use It
-No need to memorize everything
-Look it up when you need it
-Get-Help + Google = 5 second solution
-🧠 The Pattern – Understand This, Guess 90% Commands
-Pattern	Meaning	Example
-Get-*	Read / Retrieve	Get-Process
-Set-*	Update / Modify	Set-Content
-New-*	Create	New-Item
-Remove-*	Delete	Remove-Item
-Copy-*	Copy	Copy-Item
-Move-*	Move / Rename	Move-Item
-Test-*	Check / Validate	Test-Path
-Start-*	Start	Start-Process
-Stop-*	Stop / Kill	Stop-Process
-Export-*	Output data	Export-Csv
-Import-*	Input data	Import-Csv
-Convert-*	Transform format	ConvertTo-Json
+## Step 2 — Open the Cheat Sheet
 
-One pattern = 90% commands unlocked.
+1. Download [`powershell-80-20.md`](./powershell-80-20.md)
+2. Open it in **VS Code**
+3. Press `Ctrl + Shift + V` to open Markdown Preview
+4. Bookmark it for quick reference
 
-💡 Top 5 Tips
-#	Tip	What it Does
-1	Tab key	Autocomplete – type half, Tab fills the rest
-2	Get-Help cmd	Built-in help for any command
-3	Get-Command *x*	Find commands by keyword
-4	? and %	Shorthand for Filter and Loop
-5	-WhatIf	Preview before executing
+---
 
-🤝 Contributing
-✅ Add a new use case
-✅ Missing a command? Submit a PR
-✅ Improve examples
-✅ Found an error? Open an issue
+## Step 3 — Start Using It
+
+You **don't need to memorize everything**.
+
+Use this workflow:
+
+```text
+Need something
+      ↓
+Look it up
+      ↓
+Try the command
+      ↓
+Understand what it does
+      ↓
+Use it again
+      ↓
+Eventually remember it
+```
+
+### Remember:
+
+> **Get-Help + Search = Fast Solution**
+
+---
+
+# 🧠 The PowerShell Pattern
+
+This is one of the most useful things to understand.
+
+PowerShell commands usually follow a:
+
+```text
+VERB-NOUN
+```
+
+pattern.
+
+| Pattern     | Meaning          | Example          |
+| ----------- | ---------------- | ---------------- |
+| `Get-*`     | Read / Retrieve  | `Get-Process`    |
+| `Set-*`     | Update / Modify  | `Set-Content`    |
+| `New-*`     | Create           | `New-Item`       |
+| `Remove-*`  | Delete           | `Remove-Item`    |
+| `Copy-*`    | Copy             | `Copy-Item`      |
+| `Move-*`    | Move / Rename    | `Move-Item`      |
+| `Test-*`    | Check / Validate | `Test-Path`      |
+| `Start-*`   | Start            | `Start-Process`  |
+| `Stop-*`    | Stop             | `Stop-Process`   |
+| `Export-*`  | Export data      | `Export-Csv`     |
+| `Import-*`  | Import data      | `Import-Csv`     |
+| `Convert-*` | Convert data     | `ConvertTo-Json` |
+
+### 💡 The Big Idea
+
+If you understand the pattern:
+
+```text
+Get
+Set
+New
+Remove
+Copy
+Move
+Test
+Start
+Stop
+Import
+Export
+Convert
+```
+
+you can often **guess or discover unfamiliar commands much faster**.
+
+> 🧠 **Understand the pattern → Learn fewer commands → Do more work**
+
+---
+
+# 💡 Top 5 PowerShell Tips
+
+| # | Tip           | What It Does                          |
+| - | ------------- | ------------------------------------- |
+| 1 | `Tab`         | Autocomplete commands and paths       |
+| 2 | `Get-Help`    | Built-in help for commands            |
+| 3 | `Get-Command` | Find commands by keyword              |
+| 4 | `?` / `%`     | Shortcuts for filtering and looping   |
+| 5 | `-WhatIf`     | Preview an action before executing it |
+
+### Example
+
+```powershell
+Get-Help Get-Process
+```
+
+Find commands related to processes:
+
+```powershell
+Get-Command *Process*
+```
+
+Preview a potentially destructive command:
+
+```powershell
+Remove-Item .\test.txt -WhatIf
+```
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+You can help by:
+
+* ✅ Adding a useful developer use case
+* ✅ Adding a missing command
+* ✅ Improving existing examples
+* ✅ Fixing documentation
+* ✅ Reporting errors
+* ✅ Submitting a Pull Request
+
+## Contribution Workflow
+
+```bash
+# Clone the repository
 git clone https://github.com/YOUR_USERNAME/powershell-80-20.git
+
+# Enter the project
 cd powershell-80-20
+
+# Create a new branch
 git checkout -b feature/your-feature
+
+# Make your changes
 # Edit powershell-80-20.md
+
+# Stage changes
 git add .
+
+# Commit
 git commit -m "Add: new use case for XYZ"
+
+# Push
 git push origin feature/your-feature
+```
 
-📄 License
-MIT License – Free to use, share, modify.
+Then open a **Pull Request** on GitHub.
 
-Full License →
+---
 
-🙏 Acknowledgments
-PowerShell Official Docs
-PowerShell Cheat Sheet by James Evans
-All devs who shared knowledge in communities
-⭐ If You Found This Helpful
-Give a ⭐ Star. Share with your team.
+# 📄 License
 
-Platform	What to Do
-GitHub	Star ⭐ + Fork 🍴
-LinkedIn	Share a post
-Twitter/X	Tweet it
-Discord/Slack	Drop in team channel
-Reddit	r/PowerShell, r/learnprogramming
+This project is licensed under the **MIT License**.
 
+You are free to:
+
+* Use it
+* Share it
+* Modify it
+* Learn from it
+* Include it in your own projects
+
+See [`LICENSE`](./LICENSE) for the complete license text.
+
+---
+
+# 🙏 Acknowledgments
+
+Thanks to:
+
+* [PowerShell Official Documentation](https://learn.microsoft.com/powershell/)
+* PowerShell community contributors
+* Developers sharing knowledge through open-source projects
+* Everyone contributing examples and improvements
+
+---
+
+# ⭐ Found This Helpful?
+
+If this cheat sheet saves you time, consider supporting the project:
+
+| Platform           | What You Can Do                           |
+| ------------------ | ----------------------------------------- |
+| 🐙 GitHub          | ⭐ Star + 🍴 Fork                          |
+| 💼 LinkedIn        | Share it with developers                  |
+| 𝕏 Twitter/X       | Share the project                         |
+| 💬 Discord / Slack | Drop it in your team channel              |
+| 🟠 Reddit          | Share in relevant programming communities |
+
+---
+
+<div align="center">
+
+### ⚡ Learn less. Build more.
+
+**PowerShell 80/20 — Your daily PowerShell reference.**
+
+⭐ If this helped you, consider giving the repository a star!
+
+</div>
